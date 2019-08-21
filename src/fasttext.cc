@@ -399,7 +399,7 @@ void FastText::skipgram(
     int32_t boundary = uniform(state.rng);
     const std::vector<int32_t>& ngrams = dict_->getSubwords(line[w]);
     for (int32_t c = -boundary; c <= boundary; c++) {
-      if (c != 0 && w + c >= 0 && w + c < line.size()) {
+      if (c != 0 && w + c >= 0 && dict_->isInLex(w)  && w + c < line.size()) {
         model_->update(ngrams, line, w + c, lr, state);
       }
     }
@@ -763,6 +763,10 @@ void FastText::train(const Args& args) {
   }
   dict_->readFromFile(ifs);
   ifs.close();
+  std::ifstream lex_ifs(args_->input + ".lex");
+  if(lex_ifs.is_open()) dict_->readLexFromFile(lex_ifs);
+  lex_ifs.close();
+
 
   if (!args_->pretrainedVectors.empty()) {
     input_ = getInputMatrixFromFile(args_->pretrainedVectors);

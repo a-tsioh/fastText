@@ -231,6 +231,22 @@ bool Dictionary::readWord(std::istream& in, std::string& word) const {
   return !word.empty();
 }
 
+
+void Dictionary::readLexFromFile(std::istream& in) {
+  useLex_ = true;
+  for(std::string word; std::getline(in, word);) {
+    int32_t wid = getId(word);
+    if(wid >= 0) {
+      lexicon_.insert(wid);
+    }
+  } 
+}
+
+bool Dictionary::isInLex(const int32_t wid) {
+	return !useLex_ || lexicon_.count(wid) > 0;
+}
+
+
 void Dictionary::readFromFile(std::istream& in) {
   std::string word;
   int64_t minThreshold = 1;

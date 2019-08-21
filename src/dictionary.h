@@ -15,6 +15,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <set>
 
 #include "args.h"
 #include "real.h"
@@ -47,6 +48,9 @@ class Dictionary {
   std::shared_ptr<Args> args_;
   std::vector<int32_t> word2int_;
   std::vector<entry> words_;
+  
+  std::set<int32_t> lexicon_;
+  bool useLex_ = false;
 
   std::vector<real> pdiscard_;
   int32_t size_;
@@ -91,6 +95,8 @@ class Dictionary {
   void add(const std::string&);
   bool readWord(std::istream&, std::string&) const;
   void readFromFile(std::istream&);
+  void readLexFromFile(std::istream&);
+  bool isInLex(const int32_t);
   std::string getLabel(int32_t) const;
   void save(std::ostream&) const;
   void load(std::istream&);
